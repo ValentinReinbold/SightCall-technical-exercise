@@ -14,10 +14,10 @@ function request(method, endpoint, status, params) {
     xhr.onload = function () {
         if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == status) {
             var result = xhr.response;
-            console.log(result);
+            console.log("Success", result.data);
         }
         else {
-            console.log("Request failed");
+            console.log("Request failed", xhr);
         }
     };
     xhr.onerror = function () {
@@ -27,6 +27,20 @@ function request(method, endpoint, status, params) {
         console.log("Timeout");
     };
     xhr.send(JSON.stringify(params));
+}
+
+function createAppointment() {
+    params = {
+        'data': {
+            'type': 'appointments',
+            'attributes': {
+                'start-time': '2021-12-31T13:00:00.000Z',
+                'end-time': '2021-12-31T14:00:00.000Z',
+                'product-id': null
+            }
+        }
+    };
+    request('POST', "/api/appointments", 201, params);
 }
 
 function listAppointments() {
