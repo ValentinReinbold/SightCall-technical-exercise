@@ -46,3 +46,8 @@ function createAppointment() {
 function listAppointments() {
     request('GET', "/api/appointments", 200);
 }
+
+function retrieveAppointment() {
+    id = 1764;
+    request('GET', "/api/appointments/" + id, 200);
+}
