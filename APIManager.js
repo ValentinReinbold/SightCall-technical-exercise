@@ -3,21 +3,21 @@ const hostURL = "https://appointment-ppr.sightcall.com";
 const name = "SA_Interview";
 const APIKey = "w7kPvNc3qyzASMMET17QYDMOsusgVWTp";
 
-function request(method, endpoint, status, params) {
-    var url = hostURL + endpoint;
+function request(info) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
-    xhr.open(method, url, true);
+    xhr.open(info.method, hostURL + info.endpoint, true);
     xhr.setRequestHeader('Content-Type', "application/vnd.api+json");
     xhr.setRequestHeader('X-Authorization', "Token " + APIKey);
     xhr.timeout = 2500;
     xhr.onload = function () {
-        if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == status) {
+        if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == info.status) {
             var result = xhr.response;
             console.log("Success", result);
         }
         else {
-            console.log("Request failed", xhr);
+            var errors = xhr.response.errors;
+            console.log("Request failed", errors);
         }
     };
     xhr.onerror = function () {
@@ -26,11 +26,11 @@ function request(method, endpoint, status, params) {
     xhr.ontimeout = function () {
         console.log("Timeout");
     };
-    xhr.send(JSON.stringify(params));
+    xhr.send(JSON.stringify(info.params));
 }
 
 function createAppointment() {
-    params = {
+    var params = {
         'data': {
             'type': 'appointments',
             'attributes': {
@@ -40,31 +40,58 @@ function createAppointment() {
             }
         }
     };
-    request('POST', "/api/appointments", 201, params);
+    var info = {
+        'method': 'POST',
+        'endpoint': "/api/appointments",
+        'status': 201,
+        'params': params
+    }
+    request(info);
 }
 
 function listAppointments() {
-    request('GET', "/api/appointments", 200);
+    var info = {
+        'method': 'GET',
+        'endpoint': "/api/appointments",
+        'status': 200
+    }
+    request(info);
 }
 
 function retrieveAppointment() {
-    id = 1764;
-    request('GET', "/api/appointments/" + id, 200);
+    var id = 1764;
+    var info = {
+        'method': 'GET',
+        'endpoint': "/api/appointments/" + id,
+        'status': 200
+    }
+    request(info);
 }
 
 function updateAppointment() {
-    id = 1764;
-    params = {
+    var id = 1764;
+    var params = {
         'data': {
             'id': id,
             'type': 'appointments',
             'attributes': {}
         }
     };
-    request('PATCH', "/api/appointments/" + id, 200, params);
+    var info = {
+        'method': 'PATCH',
+        'endpoint': "/api/appointments/" + id,
+        'status': 200,
+        'params': params
+    }
+    request(info);
 }
 
 function deleteAppointment() {
-    id = 1767;
-    request('DELETE', "/api/appointments/" + id, 204);
+    var id = 1770;
+    var info = {
+        'method': 'DELETE',
+        'endpoint': "/api/appointments/" + id,
+        'status': 204
+    }
+    request(info);
 }
