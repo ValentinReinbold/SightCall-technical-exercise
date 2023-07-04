@@ -15,8 +15,8 @@ function Appointment(str) {
         return "Appointment #" + this.id
             + (this.name ? " \"" + this.name + "\"" : '')
             + (this.scheduled ? '' : ' CANCELLED')
-            + "\nfrom: " + this.startTime.toDateString() + " - " + this.startTime.toTimeString()
-            + "\nuntil: " + this.endTime.toDateString() + " - " + this.endTime.toTimeString()
+            + "\nfrom: " + this.startTime.toLocaleDateString() + " - " + this.startTime.toLocaleTimeString()
+            + "\nuntil: " + this.endTime.toLocaleDateString() + " - " + this.endTime.toLocaleTimeString()
             + (this.agentName ? "\nagentName: " + this.agentName : '')
             + (this.usecaseID ? "\nusecaseID: " + this.usecaseID : '')
             + (this.waitingRoomURL ? "\nwaitingRoomURL: " + this.waitingRoomURL : '')
