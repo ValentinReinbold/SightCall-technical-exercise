@@ -14,7 +14,7 @@ function request(method, endpoint, status, params) {
     xhr.onload = function () {
         if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == status) {
             var result = xhr.response;
-            console.log("Success", result.data);
+            console.log("Success", result);
         }
         else {
             console.log("Request failed", xhr);
@@ -62,4 +62,9 @@ function updateAppointment() {
         }
     };
     request('PATCH', "/api/appointments/" + id, 200, params);
+}
+
+function deleteAppointment() {
+    id = 1767;
+    request('DELETE', "/api/appointments/" + id, 204);
 }
