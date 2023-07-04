@@ -51,3 +51,15 @@ function retrieveAppointment() {
     id = 1764;
     request('GET', "/api/appointments/" + id, 200);
 }
+
+function updateAppointment() {
+    id = 1764;
+    params = {
+        'data': {
+            'id': id,
+            'type': 'appointments',
+            'attributes': {}
+        }
+    };
+    request('PATCH', "/api/appointments/" + id, 200, params);
+}
