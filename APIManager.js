@@ -3,7 +3,7 @@ const hostURL = "https://appointment-ppr.sightcall.com";
 const name = "SA_Interview";
 const APIKey = "w7kPvNc3qyzASMMET17QYDMOsusgVWTp";
 
-function request(info) {
+function request(info, callback) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.open(info.method, hostURL + info.endpoint, true);
@@ -13,23 +13,22 @@ function request(info) {
     xhr.onload = function () {
         if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == info.status) {
             var result = xhr.response;
-            console.log("Success", result);
+            callback(true, result);
         }
         else {
-            var errors = xhr.response.errors;
-            console.log("Request failed", errors);
+            callback(false, "Request failed");
         }
     };
     xhr.onerror = function () {
-        console.log("Error");
+        callback(false, "Error");
     };
     xhr.ontimeout = function () {
-        console.log("Timeout");
+        callback(false, "Timeout");
     };
     xhr.send(JSON.stringify(info.params));
 }
 
-function createAppointment() {
+function createAppointment(callback) {
     var params = {
         'data': {
             'type': 'appointments',
@@ -46,29 +45,29 @@ function createAppointment() {
         'status': 201,
         'params': params
     }
-    request(info);
+    request(info, callback);
 }
 
-function listAppointments() {
+function listAppointments(callback) {
     var info = {
         'method': 'GET',
         'endpoint': "/api/appointments",
         'status': 200
     }
-    request(info);
+    request(info, callback);
 }
 
-function retrieveAppointment() {
+function retrieveAppointment(callback) {
     var id = 1764;
     var info = {
         'method': 'GET',
         'endpoint': "/api/appointments/" + id,
         'status': 200
     }
-    request(info);
+    request(info, callback);
 }
 
-function updateAppointment() {
+function updateAppointment(callback) {
     var id = 1764;
     var params = {
         'data': {
@@ -83,15 +82,15 @@ function updateAppointment() {
         'status': 200,
         'params': params
     }
-    request(info);
+    request(info, callback);
 }
 
-function deleteAppointment() {
+function deleteAppointment(callback) {
     var id = 1770;
     var info = {
         'method': 'DELETE',
         'endpoint': "/api/appointments/" + id,
         'status': 204
     }
-    request(info);
+    request(info, callback);
 }
