@@ -35,8 +35,11 @@ function update() {
                 return appointments[a].startTime.getTime() - appointments[b].startTime.getTime();
             });
 
+            var schedule = {};
+            schedule = generateSchedule(appointmentSortedIDs);
+
             clearTable();
-            fillTable(appointmentSortedIDs);
+            fillTable(schedule);
         }
     });
 }
@@ -54,19 +57,9 @@ function generateList(data, day) {
     return list;
 }
 
-function clearTable() {
-    while (appointmentTable.children[1]) {
-        appointmentTable.removeChild(appointmentTable.lastChild);
-    }
-}
-
-function fillTable(appointmentSortedIDs) {
+function generateSchedule(appointmentSortedIDs) {
+    var schedule = {};
     for (var h = morningTime; h <= eveningTime; h += period) {
-        var hour = Math.floor(h);
-        var minute = (h == hour ? 0 : period*60);
-        var timeStr = hour.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})
-            + ":" + minute.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false});
-
         var appointment = null
         for (var id of appointmentSortedIDs) {
             appointment = appointments[id];
@@ -77,24 +70,45 @@ function fillTable(appointmentSortedIDs) {
             }
             appointment = null;
         }
-        addRow(timeStr, appointment);
+        schedule[h*100] = appointment;
+    }
+    return schedule;
+}
+
+function clearTable() {
+    while (appointmentTable.children[1]) {
+        appointmentTable.removeChild(appointmentTable.lastChild);
     }
 }
 
-function addRow(timeStr, appointment) {
-    var str = "<tr><th>" + timeStr + "</th>";
+function fillTable(schedule) {
+    for (const h in schedule) {
+        addRow(h, schedule[h]);
+    }
+}
+
+function addRow(h, appointment) {
+    var hour = Math.floor(h/100);
+    var minute = (h/100 == hour ? 0 : period*60);
+    var timeStr = hour.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})
+        + ":" + minute.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false});
+
+    var str = "<tr><td>" + timeStr + "</td>";
     if (appointment) {
-        str += "<th>" + (appointment.startTime ? appointment.startTime.toLocaleDateString() : "") + "</th>"
-            + "<th>" + (appointment.startTime ? appointment.startTime.toLocaleTimeString() : "") + "</th>"
-            + "<th><a" + (appointment.waitingRoomURL ? " href='" + appointment.waitingRoomURL + "'" : "") + ">"
+        str += "<td>" + (appointment.startTime ? appointment.startTime.toLocaleDateString() : "") + "</td>"
+            + "<td>" + (appointment.startTime ? appointment.startTime.toLocaleTimeString() : "") + "</td>"
+            + "<td><a" + (appointment.waitingRoomURL ? " href='" + appointment.waitingRoomURL + "'" : "") + ">"
             + (appointment.name ? "\"" + appointment.name + "\"" : "Untitled")
             + (appointment.agentName ? " - " + appointment.agentName : "")
-            + "</a></th>";
+            + "</a></td>"
+            + "<td><button id='cancel_button'>Cancel</button></td>";
     }
     else {
-        str += "<th></th>"
-            + "<th></th>"
-            + "<th></th>";
+        str += "<td></td>"
+            + "<td></td>"
+            + "<td><input hidden class='new_title' id='new_title_" + h + "' type='text' placeholder='Enter title'></input></td>"
+            + "<td><button class='new_button' id='new_button_" + h + "'>New</button>"
+            + "<button hidden class='add_button' id='add_button_" + h + "'>Add</button></td>";
     }
     str += "</tr>";
     appointmentTable.insertAdjacentHTML('beforeend', str);
