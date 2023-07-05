@@ -60,7 +60,6 @@ function retrieveAppointment(appointment, callback) {
 
 function updateAppointment(appointment, callback) {
     var params = appointment.toJSON();
-    console.log("params", params);
     var info = {
         'method': 'PATCH',
         'endpoint': "/api/appointments/" + appointment.id,

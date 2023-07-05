@@ -1,46 +1,49 @@
-function Appointment(str) {
+class Appointment {
     
-    let instance = this;
+    constructor(str) {
 
-    this.id = null;
-    this.startTime = null;
-    this.endTime = null;
-    this.name = null;
-    this.agentName = null;
-    this.usecaseID = null;
-    this.waitingRoomURL = null;
-    this.scheduled = null;
+        let instance = this;
 
-    if (str.id) {
-        parse(str);
+        this.id = null;
+        this.startTime = null;
+        this.endTime = null;
+        this.name = null;
+        this.agentName = null;
+        this.usecaseID = null;
+        this.waitingRoomURL = null;
+        this.scheduled = null;
+
+        if (str.id) {
+            parse(str);
+        }
+        else {
+            init(str);
+        }
+
+        function parse(obj) {
+            instance.id = obj.id;
+
+            instance.startTime = new Date(obj.attributes['start-time']);
+            instance.endTime = new Date(obj.attributes['end-time']);
+
+            instance.name = obj.attributes.name;
+            instance.agentName = obj.attributes['agent-display-name'];
+            instance.usecaseID = obj.attributes['usecase-id'];
+            instance.waitingRoomURL = obj.attributes['agent-default-url'] ?? obj.attributes['guest-default-url'];
+            instance.scheduled = obj.attributes.status == 'SCHEDULED';
+        }
+
+        function init(obj) {
+            instance.startTime = obj.startTime;
+            instance.endTime = obj.endTime;
+            instance.name = obj.name;
+            instance.agentName = obj.agentName;
+            instance.usecaseID = obj.usecaseID;
+            instance.scheduled = obj.scheduled;
+        }
     }
-    else {
-        init(str);
-    }
 
-    function parse(obj) {
-        instance.id = obj.id;
-
-        instance.startTime = new Date(obj.attributes['start-time']);
-        instance.endTime = new Date(obj.attributes['end-time']);
-
-        instance.name = obj.attributes.name;
-        instance.agentName = obj.attributes['agent-display-name'];
-        instance.usecaseID = obj.attributes['usecase-id'];
-        instance.waitingRoomURL = obj.attributes['agent-default-url'] ?? obj.attributes['guest-default-url'];
-        instance.scheduled = obj.attributes.status == 'SCHEDULED';
-    }
-
-    function init(obj) {
-        instance.startTime = obj.startTime;
-        instance.endTime = obj.endTime;
-        instance.name = obj.name;
-        instance.agentName = obj.agentName;
-        instance.usecaseID = obj.usecaseID;
-        instance.scheduled = obj.scheduled;
-    }
-
-    this.toJSON = function() {
+    toJSON() {
         let json = {
             'data': {
                 'type': 'appointments',
@@ -58,9 +61,9 @@ function Appointment(str) {
             json.data.id = this.id;
         }
         return json;
-    }
+    };
 
-    this.toString = function() {
+    toString() {
         let str = "Appointment #" + this.id
             + (this.name ? " \"" + this.name + "\"" : '')
             + (this.scheduled ? '' : ' CANCELLED')
@@ -71,5 +74,5 @@ function Appointment(str) {
             + (this.waitingRoomURL ? "\nwaitingRoomURL: " + this.waitingRoomURL : '')
             + "\n";
         return str;
-    }
+    };
 }
