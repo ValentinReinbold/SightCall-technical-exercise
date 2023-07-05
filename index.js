@@ -58,9 +58,11 @@ function generateList(data, day) {
     var list = {};
     data.forEach(str => {
         var appointment = new Appointment(str);
-        if (new Date(appointment.startTime.toDateString()) <= day && day <= new Date(appointment.endTime.toDateString())) {
-            if (appointment.startTime.getHours() < eveningTime && morningTime < appointment.endTime.getHours()) {
-                list[str.id] = appointment;
+        if (appointment.agentName == agentName) {
+            if (new Date(appointment.startTime.toDateString()) <= day && day <= new Date(appointment.endTime.toDateString())) {
+                if (appointment.startTime.getHours() < eveningTime && morningTime < appointment.endTime.getHours()) {
+                    list[str.id] = appointment;
+                }
             }
         }
     });
