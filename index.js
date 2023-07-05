@@ -1,5 +1,10 @@
+const agentName = "Valentin Reinbold";
+const agentEmail = "valentinreinbold.pro@gmail.com";
+const usecaseID = 19185;
+const usecaseName = "Show me";
+
 const morningTime = 9;
-const eveningTime = 17;
+const eveningTime = 18;
 const period = 0.5;
 
 var dayPicker = document.getElementById("day_picker");
@@ -22,12 +27,16 @@ update();
 function update() {
     listAppointments((success, result) => {
         if (!success) {
-            console.log(result);
+            console.log("Listing:", result);
             return;
         }
 
         var data = result.data;
+        console.log("Listing:", data);
         if (data && data.length) {
+
+            //deleteAllAppointments(data);
+
             appointments = {};
             appointments = generateList(data, day);
 
@@ -50,7 +59,7 @@ function generateList(data, day) {
         var appointment = new Appointment(str);
         if (new Date(appointment.startTime.toDateString()) <= day && day <= new Date(appointment.endTime.toDateString())) {
             if (appointment.startTime.getHours() < eveningTime && morningTime < appointment.endTime.getHours()) {
-                list[str.id] = new Appointment(str);
+                list[str.id] = appointment;
             }
         }
     });
@@ -70,7 +79,7 @@ function generateSchedule(appointmentSortedIDs) {
             }
             appointment = null;
         }
-        schedule[h*100] = appointment;
+        schedule[h*100] = appointment ? appointment.id : null;
     }
     return schedule;
 }
@@ -87,13 +96,14 @@ function fillTable(schedule) {
     }
 }
 
-function addRow(h, appointment) {
+function addRow(h, id) {
     var hour = Math.floor(h/100);
     var minute = (h/100 == hour ? 0 : period*60);
     var timeStr = hour.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})
         + ":" + minute.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false});
+    var appointment = appointments[id];
 
-    var str = "<tr><td>" + timeStr + "</td>";
+    var str = "<tr><th>" + timeStr + "</th>";
     if (appointment) {
         str += "<td>" + (appointment.startTime ? appointment.startTime.toLocaleDateString() : "") + "</td>"
             + "<td>" + (appointment.startTime ? appointment.startTime.toLocaleTimeString() : "") + "</td>"
@@ -101,15 +111,29 @@ function addRow(h, appointment) {
             + (appointment.name ? "\"" + appointment.name + "\"" : "Untitled")
             + (appointment.agentName ? " - " + appointment.agentName : "")
             + "</a></td>"
-            + "<td><button id='cancel_button'>Cancel</button></td>";
+            + "<td><button id='cancel_button' id='cancel_button_" + h + "' value='" + h + "'>Cancel</button></td>";
     }
     else {
         str += "<td></td>"
             + "<td></td>"
             + "<td><input hidden class='new_title' id='new_title_" + h + "' type='text' placeholder='Enter title'></input></td>"
-            + "<td><button class='new_button' id='new_button_" + h + "'>New</button>"
-            + "<button hidden class='add_button' id='add_button_" + h + "'>Add</button></td>";
+            + "<td><button class='new_button' id='new_button_" + h + "' value='" + h + "'>New</button>"
+            + "<button hidden class='add_button' id='add_button_" + h + "' value='" + h + "'>Add</button></td>";
     }
     str += "</tr>";
     appointmentTable.insertAdjacentHTML('beforeend', str);
+}
+
+function deleteAllAppointments(data) {
+    data.forEach((a) => {
+        if (a.id != 1764) {
+            deleteAppointment(a, (success, result) => {
+                if (!success) {
+                    console.log("Deletion:", result);
+                    return;
+                }
+                //update();
+            });
+        }
+    })
 }
