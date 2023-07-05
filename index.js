@@ -4,7 +4,7 @@ const usecaseID = 19185;
 const usecaseName = "Show me";
 
 const morningTime = 9;
-const eveningTime = 18;
+const eveningTime = 17;
 const period = 0.5;
 
 var dayPicker = document.getElementById("day_picker");
@@ -21,6 +21,7 @@ dayPicker.addEventListener("change", (event) => {
     day = new Date((new Date(event.target.value)).toDateString());
     update();
 });
+document.getElementById('delete_all').addEventListener("click", deleteAllAppointments);
 
 update();
 
@@ -32,24 +33,23 @@ function update() {
         }
 
         var data = result.data;
+        var appointmentSortedIDs = [];
+        
         console.log("Listing:", data);
         if (data && data.length) {
-
-            //deleteAllAppointments(data);
-
             appointments = {};
             appointments = generateList(data, day);
 
-            var appointmentSortedIDs = Object.keys(appointments).sort((a, b) => {
+            appointmentSortedIDs = Object.keys(appointments).sort((a, b) => {
                 return appointments[a].startTime.getTime() - appointments[b].startTime.getTime();
             });
-
-            var schedule = {};
-            schedule = generateSchedule(appointmentSortedIDs);
-
-            clearTable();
-            fillTable(schedule);
         }
+
+        var schedule = {};
+        schedule = generateSchedule(appointmentSortedIDs);
+
+        clearTable();
+        fillTable(schedule);
     });
 }
 
@@ -68,7 +68,7 @@ function generateList(data, day) {
 
 function generateSchedule(appointmentSortedIDs) {
     var schedule = {};
-    for (var h = morningTime; h <= eveningTime; h += period) {
+    for (var h = morningTime; h < eveningTime; h += period) {
         var appointment = null
         for (var id of appointmentSortedIDs) {
             appointment = appointments[id];
@@ -111,7 +111,9 @@ function addRow(h, id) {
             + (appointment.name ? "\"" + appointment.name + "\"" : "Untitled")
             + (appointment.agentName ? " - " + appointment.agentName : "")
             + "</a></td>"
-            + "<td><button id='cancel_button' id='cancel_button_" + h + "' value='" + h + "'>Cancel</button></td>";
+            + (appointment.scheduled
+                ? "<td><button class='cancel_button' id='cancel_button_" + h + "' value='" + h + "'>Cancel</button></td>"
+                : "<td><button class='delete_button' id='delete_button_" + h + "' value='" + h + "'>Delete</button></td>");
     }
     else {
         str += "<td></td>"
@@ -125,15 +127,20 @@ function addRow(h, id) {
 }
 
 function deleteAllAppointments(data) {
-    data.forEach((a) => {
-        if (a.id != 1764) {
-            deleteAppointment(a, (success, result) => {
+    listAppointments((success, result) => {
+        if (!success) {
+            console.log("Listing:", result);
+            return;
+        }
+        var data = result.data;
+        data.forEach((appointment) => {
+            deleteAppointment(appointment, (success, result) => {
                 if (!success) {
                     console.log("Deletion:", result);
                     return;
                 }
-                //update();
+                update();
             });
-        }
-    })
+        })
+    });
 }
