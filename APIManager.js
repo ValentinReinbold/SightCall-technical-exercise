@@ -28,17 +28,9 @@ function request(info, callback) {
     xhr.send(JSON.stringify(info.params));
 }
 
-function createAppointment(callback) {
-    var params = {
-        'data': {
-            'type': 'appointments',
-            'attributes': {
-                'start-time': '2021-12-31T13:00:00.000Z',
-                'end-time': '2021-12-31T14:00:00.000Z',
-                'product-id': null
-            }
-        }
-    };
+function createAppointment(appointment, callback) {
+    var params = appointment.toJSON();
+    params.data.attributes['product-id'] = null;
     var info = {
         'method': 'POST',
         'endpoint': "/api/appointments",
@@ -57,39 +49,36 @@ function listAppointments(callback) {
     request(info, callback);
 }
 
-function retrieveAppointment(callback) {
-    var id = 1764;
+function retrieveAppointment(appointment, callback) {
     var info = {
         'method': 'GET',
-        'endpoint': "/api/appointments/" + id,
+        'endpoint': "/api/appointments/" + appointment.id,
         'status': 200
     }
     request(info, callback);
 }
 
-function updateAppointment(callback) {
-    var id = 1764;
+function updateAppointment(appointment, callback) {
     var params = {
         'data': {
-            'id': id,
+            'id': appointment.id,
             'type': 'appointments',
             'attributes': {}
         }
     };
     var info = {
         'method': 'PATCH',
-        'endpoint': "/api/appointments/" + id,
+        'endpoint': "/api/appointments/" + appointment.id,
         'status': 200,
         'params': params
     }
     request(info, callback);
 }
 
-function deleteAppointment(callback) {
-    var id = 1770;
+function deleteAppointment(appointment, callback) {
     var info = {
         'method': 'DELETE',
-        'endpoint': "/api/appointments/" + id,
+        'endpoint': "/api/appointments/" + appointment.id,
         'status': 204
     }
     request(info, callback);
