@@ -41,23 +41,27 @@ function Appointment(str) {
     }
 
     this.toJSON = function() {
-        return {
+        let json = {
             'data': {
                 'type': 'appointments',
                 'attributes': {
                     'start-time': this.startTime.toJSON(),
                     'end-time': this.endTime.toJSON(),
-                    "name": this.name,
-                    "agent-display-name": this.agentName,
-                    "usecase-id": this.usecaseID,
-                    "status": this.scheduled ? 'SCHEDULED' : 'CANCELLED'
+                    'name': this.name,
+                    'agent-display-name': this.agentName,
+                    //'usecase-id': this.usecaseID,
+                    'status': this.scheduled ? 'SCHEDULED' : 'CANCELLED'
                 }
             }
         };
+        if (this.id) {
+            json.data.id = this.id;
+        }
+        return json;
     }
 
     this.toString = function() {
-        return "Appointment #" + this.id
+        let str = "Appointment #" + this.id
             + (this.name ? " \"" + this.name + "\"" : '')
             + (this.scheduled ? '' : ' CANCELLED')
             + "\nfrom: " + this.startTime.toLocaleDateString() + " - " + this.startTime.toLocaleTimeString()
@@ -66,5 +70,6 @@ function Appointment(str) {
             + (this.usecaseID ? "\nusecaseID: " + this.usecaseID : '')
             + (this.waitingRoomURL ? "\nwaitingRoomURL: " + this.waitingRoomURL : '')
             + "\n";
+        return str;
     }
 }
