@@ -40,6 +40,22 @@ function Appointment(str) {
         instance.scheduled = obj.scheduled;
     }
 
+    this.toJSON = function() {
+        return {
+            'data': {
+                'type': 'appointments',
+                'attributes': {
+                    'start-time': this.startTime.toJSON(),
+                    'end-time': this.endTime.toJSON(),
+                    "name": this.name,
+                    "agent-display-name": this.agentName,
+                    "usecase-id": this.usecaseID,
+                    "status": this.scheduled ? 'SCHEDULED' : 'CANCELLED'
+                }
+            }
+        };
+    }
+
     this.toString = function() {
         return "Appointment #" + this.id
             + (this.name ? " \"" + this.name + "\"" : '')
