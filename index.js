@@ -104,11 +104,11 @@ function addRow(h, id) {
         + ":" + minute.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false});
     var appointment = appointments[id];
 
-    var str = "<tr><th>" + timeStr + "</th>";
+    var str = "<tbody><tr>"
+        + "<th>" + timeStr + "</th>";
     if (appointment) {
         str += "<td>" + (appointment.agentName ? appointment.agentName : "") + "</td>"
             + "<td>" + (appointment.name ? "\"" + appointment.name + "\"" : "Untitled") + "</td>";
-
         if (appointment.scheduled) {
             str += "<td><a" + (appointment.waitingRoomURL ? " href='" + appointment.waitingRoomURL + "'" : "") + ">Waiting Room</a></td>"
                 + "<td><button class='cancel_button' id='cancel_button_" + h + "' value='" + h + "'>Cancel</button></td>";
@@ -125,7 +125,7 @@ function addRow(h, id) {
             + "<td><button class='new_button' id='new_button_" + h + "' value='" + h + "'>New</button>"
             + "<button hidden class='add_button' id='add_button_" + h + "' value='" + h + "'>Add</button></td>";
     }
-    str += "</tr>";
+    str += "</tr></tbody>";
     appointmentTable.insertAdjacentHTML('beforeend', str);
 }
 

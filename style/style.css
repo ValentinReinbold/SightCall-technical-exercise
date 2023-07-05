@@ -1,0 +1,47 @@
+body {
+    font-family: sans-serif;
+}
+
+img {
+    width:400px;
+}
+
+p {
+    color: #909494;
+    margin-left: 50px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+	vertical-align: middle;
+}
+
+thead {
+    background-color: #f88424;
+    color: white;
+}
+
+tbody th {
+    background-color: #909494;
+    color: #fff;
+    text-align: right;
+}
+
+th, td {
+    padding: 8px;
+}
+
+button {
+    width:100%;
+}
+
+input {
+    width:100%;
+}
+
+input[type=date] {
+    width:100%;
+    text-align: right;
+}
