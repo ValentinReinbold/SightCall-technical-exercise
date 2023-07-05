@@ -59,13 +59,8 @@ function retrieveAppointment(appointment, callback) {
 }
 
 function updateAppointment(appointment, callback) {
-    var params = {
-        'data': {
-            'id': appointment.id,
-            'type': 'appointments',
-            'attributes': {}
-        }
-    };
+    var params = appointment.toJSON();
+    console.log("params", params);
     var info = {
         'method': 'PATCH',
         'endpoint': "/api/appointments/" + appointment.id,
