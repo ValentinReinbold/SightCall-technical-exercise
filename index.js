@@ -106,20 +106,22 @@ function addRow(h, id) {
 
     var str = "<tr><th>" + timeStr + "</th>";
     if (appointment) {
-        str += "<td>" + (appointment.startTime ? appointment.startTime.toLocaleDateString() : "") + "</td>"
-            + "<td>" + (appointment.startTime ? appointment.startTime.toLocaleTimeString() : "") + "</td>"
-            + "<td><a" + (appointment.waitingRoomURL ? " href='" + appointment.waitingRoomURL + "'" : "") + ">"
-            + (appointment.name ? "\"" + appointment.name + "\"" : "Untitled")
-            + (appointment.agentName ? " - " + appointment.agentName : "")
-            + "</a></td>"
-            + (appointment.scheduled
-                ? "<td><button class='cancel_button' id='cancel_button_" + h + "' value='" + h + "'>Cancel</button></td>"
-                : "<td><button class='delete_button' id='delete_button_" + h + "' value='" + h + "'>Delete</button></td>");
+        str += "<td>" + (appointment.agentName ? appointment.agentName : "") + "</td>"
+            + "<td>" + (appointment.name ? "\"" + appointment.name + "\"" : "Untitled") + "</td>";
+
+        if (appointment.scheduled) {
+            str += "<td><a" + (appointment.waitingRoomURL ? " href='" + appointment.waitingRoomURL + "'" : "") + ">Waiting Room</a></td>"
+                + "<td><button class='cancel_button' id='cancel_button_" + h + "' value='" + h + "'>Cancel</button></td>";
+        }
+        else {
+            str += "<td>- Cancelled -</td>"
+                + "<td><button class='delete_button' id='delete_button_" + h + "' value='" + h + "'>Delete</button></td>";
+        }
     }
     else {
         str += "<td></td>"
-            + "<td></td>"
             + "<td><input hidden class='new_title' id='new_title_" + h + "' type='text' placeholder='Enter title'></input></td>"
+            + "<td></td>"
             + "<td><button class='new_button' id='new_button_" + h + "' value='" + h + "'>New</button>"
             + "<button hidden class='add_button' id='add_button_" + h + "' value='" + h + "'>Add</button></td>";
     }

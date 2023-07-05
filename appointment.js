@@ -27,7 +27,7 @@ function Appointment(str) {
         instance.name = obj.attributes.name;
         instance.agentName = obj.attributes['agent-display-name'];
         instance.usecaseID = obj.attributes['usecase-id'];
-        instance.waitingRoomURL = obj.attributes['agent-default-url'];
+        instance.waitingRoomURL = obj.attributes['agent-default-url'] ?? obj.attributes['guest-default-url'];
         instance.scheduled = obj.attributes.status == 'SCHEDULED';
     }
 
