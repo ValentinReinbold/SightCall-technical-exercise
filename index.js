@@ -1,3 +1,6 @@
+const githubClientID = "71bab4a69477b6cc652a";
+const githubClientSecret = "cffe7c6347527cdf6213f041622ca6e9fd99b90b";
+
 const agentName = "Valentin Reinbold";
 const agentEmail = "valentinreinbold.pro@gmail.com";
 const usecaseID = 19185;
