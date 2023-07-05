@@ -97,9 +97,12 @@ function clearTable() {
 }
 
 function fillTable(schedule) {
+    appointmentTable.insertAdjacentHTML('beforeend', "<tbody>");
     for (const h in schedule) {
         addRow(h, schedule[h]);
     }
+    appointmentTable.insertAdjacentHTML('beforeend', "</tbody>");
+
 }
 
 function addRow(h, id) {
@@ -109,7 +112,7 @@ function addRow(h, id) {
         + ":" + minute.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false});
     var appointment = appointments[id];
 
-    var str = "<tbody><tr>"
+    var str = "<tr>"
         + "<th>" + timeStr + "</th>";
     if (appointment) {
         str += "<td>" + (appointment.agentName ? appointment.agentName : "") + "</td>"
@@ -130,7 +133,7 @@ function addRow(h, id) {
             + "<td><button class='new_button' id='new_button_" + h + "' value='" + h + "'>New</button>"
             + "<button hidden class='add_button' id='add_button_" + h + "' value='" + h + "'>Add</button></td>";
     }
-    str += "</tr></tbody>";
+    str += "</tr>";
     appointmentTable.insertAdjacentHTML('beforeend', str);
 }
 

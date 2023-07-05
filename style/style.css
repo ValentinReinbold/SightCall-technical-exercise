@@ -29,6 +29,14 @@ tbody th {
     text-align: right;
 }
 
+tbody:nth-child(even) th {
+    background-color: #878a8a;
+}
+
+tbody:nth-child(even) {
+    background-color: #f0f0f0;
+}
+
 th, td {
     padding: 8px;
 }
