@@ -68,7 +68,7 @@ function fillTable(appointmentSortedIDs) {
             + ":" + minute.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false});
 
         var appointment = null
-        for (var id in appointmentSortedIDs) {
+        for (var id of appointmentSortedIDs) {
             appointment = appointments[id];
             startHour = appointment.startTime.getHours() + appointment.startTime.getMinutes() / 60;
             endHour = appointment.endTime.getHours() + appointment.endTime.getMinutes() / 60;
